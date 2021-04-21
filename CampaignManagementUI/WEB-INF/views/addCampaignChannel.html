@@ -1,0 +1,822 @@
+<div class="panel panel-flat p-20 clearfix has-fixed-height"
+     style="min-height:500px;">
+  <div class="panel-heading">
+    <h5 class="panel-title"><i class="icon-arrow-left52 position-left cursor-pointer"
+                               ui-sref="appView.campaigns.manage()"></i>
+      <span ng-if="editMode===true">Edit</span>
+      <span ng-if="!editMode"
+            data-toggle="tooltip"
+            title="Hooray">Add</span> Channel</h5>
+  </div>
+  <br/>
+  <div class="table container">
+    <div class="row">
+      <div class="col-lg-10 col-sm-12">
+        <form name="campaignForm"
+              novalidate="">
+          <div class="row">
+            <div class="form-group  col-sm-12">
+              <label for="channelSelect"
+                     class="control-label ">
+                Channel
+              </label>
+              <select class="form-control"
+                      ng-model="form.channelid"
+                      id="channelSelect"
+                      name="channelid"
+                      validator="required"
+                      valid-method="submit text"
+                      required-error-message="Please Select one channel"
+                      ng-disabled="!!editMode"
+                      ng-change="setChannelName()"
+              >
+                <option ng-selected="true"
+                        ng-if="!editMode"
+                        value=''>Select an option
+                </option>
+                <option value="{{channel.id}}"
+                        ng-repeat="channel in creativeChannels">{{channel.channelName}}
+                </option>
+              </select>
+
+            </div>
+          </div>
+
+          <div class="row"
+               ng-if="!!form.channelid">
+            <div class="col-md-12">
+
+              <div class="row"
+                   ng-if="( creativesData | filter : selectedChannel ).length > 0">
+                <div class="col-sm-12">
+                  <div class=" form-group">
+                    <label for="creative">
+                      Creative
+                    </label>
+                    <!--- UI Select Element  -->
+                    <ui-select multiple
+                               ng-model="form.creativeid"
+                               theme="bootstrap"
+                               ng-disabled="ctrl.disabled"
+                               close-on-select="false"
+                               class="ui-select"
+                               title="Select a Creative"
+                               remove-selected="false"
+                               id="creative"
+                    >
+                      <ui-select-match placeholder="Select a Creative...">
+                        {{$item.title}}
+                      </ui-select-match>
+
+                      <ui-select-choices repeat="creative in filtered = ( creativesData | filter : selectedChannel ) | propsFilter: {title: $select.search, channel:$select.search, type:$select.search }">
+                        <div ng-bind-html="creative.title"></div>
+                        <small>
+                          Id:{{creative.id}}
+                          Type: <span ng-bind-html="''+creative.type | highlight: $select.search"></span>
+                        </small>
+                      </ui-select-choices>
+                    </ui-select>
+                    <!--<ui-select-choices
+
+                      repeat="creative in filtered = ( creativesData | filter : form.channelbudget ) | propsFilter: {title: $select.search, channel:$select.search, type:$select.search }">
+                      <div ng-bind-html="creative.title | highlight: $select.search"></div>
+                    </ui-select-choices>
+                  </ui-select>-->
+                    <!--{{form.targetingsegmentid}}-->
+                    <!--- UI Select Element / -->
+
+                    <input type="hidden"
+                           name="creative"
+                           ng-model="form.creativeid"
+                           validator="required"
+                           valid-method="submit,blur"
+                           required-error-message="Please select a Creative"
+                           message-id="creativeError"
+                    />
+                    <div id="creativeError"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="row"
+                   ng-if="( creativesData | filter : selectedChannel ).length === 0">
+                <div class="form-group  col-sm-12">
+                  <h5>No Creative Found for {{selectedChannel}} Channel</h5>
+                  <br/>
+                  <button class="btn btn-lg btn-primary valign-middle"
+                          ui-sref="appView.creatives.addCreative()"><i class="icon-add"></i> <strong>Add
+                    Creative</strong></button>
+                </div>
+              </div>
+
+
+              <span ng-if="( creativesData | filter : selectedChannel ).length > 0">
+              <div class="row">
+                <div class="col-md-4 form-group">
+                  <label for="maxbid"
+                         class="control-label">
+                    Budget
+                  </label>
+                  <div class="input-group">
+                    <input class="form-control"
+                           ng-model="form.budgetpercentage"
+                           aria-describedby="Channel Percentage"
+                           id="budgetpercentage"
+                           name="budgetpercentage"
+                           placeholder="Enter Percentage"
+                           validator="required, number"
+                           valid-method="submit, keyup"
+                           required-error-message="Please enter Percentage"
+                           number-error-message="Please enter valid amount for Percentage"
+                           message-id="percentageError"
+                    />
+                    <span class="input-group-addon">%</span>
+                  </div>
+                  <span id="percentageError"></span>
+                </div>
+                <div class="col-md-4 form-group">
+                  <label for="maxbid"
+                         class="control-label">&nbsp;</label>
+                  <a ng-click="showAdvance = !showAdvance"
+                     class="btn input-group"><i class="icon-add"></i> <strong>
+                    <span ng-if="!showAdvance">Show</span> <span ng-if="!!showAdvance">Hide</span>
+                    Advance</strong></a>
+                </div>
+              </div>
+              <div class="row"
+                   ng-if="showAdvance == true">
+                <div class="form-group  col-sm-4">
+                  <label for="channelbudget"
+                         class="control-label">
+                    Channel Budget
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-addon">&#8377;</span>
+                    <input type="text"
+                           class="form-control"
+                           aria-describedby="Channel Budget"
+                           ng-model="form.channelbudget"
+                           id="channelbudget"
+                           name="channelbudget"
+                           placeholder="Enter Channel Budget"
+                           validator="number, required"
+                           valid-method="submit, keyup"
+                           required-error-message="Enter Channel Budget"
+                           number-error-message="Please enter valid amount for Channel Budget"
+                           message-id="totalBudgetError"
+                    >
+                  </div>
+                  <div id="totalBudgetError"></div>
+
+                </div>
+                <div class="form-group  col-sm-4 ">
+                  <label for="monthlyBudget"
+                         class="control-label">
+                    Monthly Cap
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-addon">&#8377;</span>
+                    <input type="text"
+                           class="form-control"
+                           ng-model="form.monthlycap"
+                           aria-describedby="Monthly Budget"
+                           id="monthlyBudget"
+                           name="monthlyBudget"
+                           placeholder="Enter Monthly Budget"
+                           validator="number, required"
+                           valid-method="submit, keyup"
+                           required-error-message="Enter Monthly Budget"
+                           number-error-message="Please enter valid amount for Monthly Budget"
+                           message-id="monthlyError"
+                    >
+                  </div>
+                  <span id="monthlyError"></span>
+                </div>
+                <div class="form-group  col-sm-4 ">
+                  <label for="dailyBudget"
+                         class="control-label">
+                    Daily Cap
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-addon">&#8377;</span>
+                    <input type="text"
+                           class="form-control"
+                           ng-model="form.dailycap"
+                           aria-describedby="Daily Budget"
+                           id="dailyBudget"
+                           name="dailyBudget"
+                           placeholder="Enter Daily Budget"
+                           validator="required, number"
+                           valid-method="submit, keyup"
+                           required-error-message="Please enter  Daily Budget"
+                           number-error-message="Please enter valid amount for  Daily Budget"
+                           message-id="dailyBudgetError"
+                    />
+                  </div>
+                  <span id="dailyBudgetError"></span>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="form-group  col-sm-12">
+                  <div ng-controller="datePickerCtrl"
+                       class="table datePickerCtrl"
+                       ng-init="init()">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <label>Start Date</label>
+                        <p class="input-group">
+                          <input type="text"
+                                 class="form-control ng-pristine ng-valid ng-isolate-scope ng-not-empty ng-valid-required ng-valid-date ng-touched"
+                                 uib-datepicker-popup="dd-MMMM-yyyy"
+                                 ng-model="startDate"
+                                 is-open="popup1.opened"
+                                 datepicker-options="dateOptions"
+                                 ng-required="true"
+                                 close-text="Close"
+                                 alt-input-formats="altInputFormats"
+                                 required="required"
+                                 style="">
+              <span class="input-group-btn">
+                <button type="button"
+                        class="btn btn-default"
+                        ng-click="open1()"><i class="icon-calendar2"></i></button>
+              </span>
+                        </p>
+                      </div>
+                      <div class="col-md-4">
+                        <label>End Date</label>
+                        <p class="input-group">
+                          <input type="text"
+                                 class="form-control"
+                                 uib-datepicker-popup="{{format}}"
+                                 ng-model="endDate"
+                                 is-open="popup2.opened"
+                                 datepicker-options="dateOptions"
+                                 ng-required="true"
+                                 close-text="Close"
+                                 alt-input-formats="altInputFormats"/>
+              <span class="input-group-btn">
+                <button type="button"
+                        class="btn btn-default"
+                        ng-click="open2()"><i class="icon-calendar2"></i></button>
+              </span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group  col-sm-4 ">
+                  <label for="maxbid"
+                         class="control-label">
+                    Max Bid
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-addon">&#8377;</span>
+                    <input class="form-control"
+                           ng-model="form.maxbid"
+                           aria-describedby="Max Bid"
+                           id="maxbid"
+                           name="maxbid"
+                           placeholder="Enter Max Bid"
+                           validator="required, number"
+                           valid-method="submit, keyup"
+                           required-error-message="Please enter Max Bid"
+                           number-error-message="Please enter valid amount for Max Bid"
+                           message-id="maxbidError"
+                    />
+                  </div>
+                  <span id="maxbidError"></span>
+                </div>
+                <div class="form-group  col-sm-4 ">
+                  <label for="expBid"
+                         class="control-label">
+                    Expected Bid
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-addon">&#8377;</span>
+                    <input class="form-control"
+                           ng-model="form.expectedbid"
+                           aria-describedby="Expected Bid"
+                           id="expBid"
+                           name="expBid"
+                           placeholder="Enter Max Bid"
+                           validator="required, number"
+                           valid-method="submit, keyup"
+                           required-error-message="Please enter Expected Bid"
+                           number-error-message="Please enter valid amount for Expected Bid"
+                           message-id="expBidError"
+                    />
+                  </div>
+                  <span id="expBidError"></span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <h3 class="pl-10">Targeting</h3>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 form-group  ">
+                      <select class="form-control width-100"
+                              ng-model="form.targettype"
+                              id="targetingType"
+                              name="targetingType"
+                              validator="required"
+                              valid-method="submit, blur"
+                              required-error-message="Please select a Target Type"
+                      >
+                        <option value="automatic">Automatic</option>
+                        <option value="manual">Manual</option>
+                      </select>
+                    </div>
+                    <div class="col-md-5 form-inline"
+                         ng-if="form.targettype === 'automatic'">
+                      <div class="form-group">
+                        <input type="checkbox"
+                               ng-model="form.idealTargeting"
+                               name="idealTargeting"
+                               id="idealTargeting"
+                               value="true"
+                               class="form-control  valign-middle"
+                               ng-click="showCampaignList()"
+                               style="height:auto;"/>
+                        <label for="idealTargeting"
+                               class="control-label valign-middle">
+                          Use Ideal Targeting Parameters
+                        </label>
+
+                        <div class="text-muted text-size-small">(only possible if have past data)
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row"
+                       ng-if="form.idealTargeting===true && form.targettype === 'automatic' && !!campaignIds && campaignIds.length > 0">
+
+                    <div class="col-md-6 form-group  ">
+                      <label for="channelSelect"
+                             class="control-label ">
+                        Select a Campaign
+                      </label>
+                      <select class="form-control"
+                              name="campaignId"
+                              id="campaignId"
+                              ng-model="form.campId"
+
+                      >
+                      <option value=""
+                              selected>Select a Campaign</option>
+                      <option ng-repeat="option in campaignIds"
+                              value="{{option.id}}">{{option.name}}</option>
+                      </select>
+                    </div>
+
+                    <div class="col-md-6 form-group"
+                         ng-if="!!form.campId">
+                      <label for="channelSelect"
+                             class="control-label ">
+                        Select Performance Metric
+                      </label>
+                      <select class="form-control"
+                              name="optimumParameter"
+                              id="optimumParameter"
+                              ng-model="form.optimumParameter"
+                              ng-change="fetchIdealTargetParameters()"
+                      >
+                      <option value=""
+                              selected>Select Performance Metric</option>
+                      <option ng-repeat="option in performanceMetrics"
+                              value="{{option.key}}">{{option.value}}</option>
+                      </select>
+                    </div>
+
+                  </div>
+                   <div class="row"
+                        ng-if="form.idealTargeting===true && form.targettype === 'automatic' && !!campaignIds && campaignIds.length === 0">
+                     <div class="col-md-12">
+                       <h4>No previous campaign found for Look Alike targeting</h4>
+                     </div>
+                   </div>
+
+                <div class="row"
+                     ng-if="form.idealTargeting===true && form.targettype === 'automatic' && !!campaignIds && campaignIds.length > 0">
+                  <div class="col-md-12">
+
+                <div ng-include src="'views/idealTargetHTML.html'"  ng-if="idealTargetParams!=null" class="table form-horizontal idealTargetParamBlock"></div>
+</div>
+                </div>
+
+                  <div class="row"
+                       id="targeting"
+                       ng-if="form.targettype === 'manual'">
+                    <div class="col-md-12">
+
+
+                      <div class="row">
+                        <div class="col-sm-12 pt-20">
+                          <div class="form-group">
+                            <label for="interestSegment">
+                              Interest Segment
+                            </label>
+                            <!--- UI Select Element  -->
+                            <ui-select multiple
+                                       ng-model="form.interestsegmentid"
+                                       theme="bootstrap"
+                                       ng-disabled="ctrl.disabled"
+                                       close-on-select="false"
+                                       class="ui-select"
+                                       title="Select a interest segment"
+                                       remove-selected="false"
+                                       id="interestSegment"
+                            >
+                              <ui-select-match placeholder="Select a Interest Segment...">
+                                {{$item.audienceSegmentName}}
+                                <!--<span ng-if="!!$item.count">({{$item.count}})</span>-->
+                              </ui-select-match>
+                              <ui-select-choices
+                                repeat="segment in formData.audienceSegments | propsFilter: {audienceSegmentName: $select.search, id:$select.search }">
+                                <div ng-bind-html="segment.audienceSegmentName | highlight: $select.search"></div>
+                              </ui-select-choices>
+                            </ui-select>
+                            <!--{{form.interestsegmentid}}-->
+                            <!--- UI Select Element / -->
+
+                            <input type="hidden"
+                                   name="InterestSegmentId"
+                                   id="InterestSegmentId"
+                                   ng-model="form.interestsegmentid"
+                                   validator="required"
+                                   valid-method="submit,blur"
+                                   required-error-message="Please select a Interest Segment"
+                                   message-id="audienceSegError"
+                            />
+
+                            <div id="audienceSegError"></div>
+                          </div>
+                        </div>
+                      </div>
+
+
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <div class=" form-group">
+                            <label for="geography">
+                              Geography
+                            </label>
+                            <!--- UI Select Element  -->
+                            <ui-select multiple
+                                       ng-model="form.geographyid"
+                                       theme="bootstrap"
+                                       ng-disabled="ctrl.disabled"
+                                       close-on-select="false"
+                                       class="ui-select"
+                                       title="Select a interest segment"
+                                       remove-selected="false"
+                                       id="geography"
+                            >
+                              <ui-select-match placeholder="Select a City...">
+                                {{$item.city}}
+                              </ui-select-match>
+                              <ui-select-choices
+                                repeat="city in formData.geo | propsFilter: {city: $select.search, id:$select.search }">
+                                <div ng-bind-html="city.city | highlight: $select.search"></div>
+                              </ui-select-choices>
+                            </ui-select>
+                            <!--{{form.interestsegmentid}}-->
+                            <!--- UI Select Element / -->
+
+                            <input type="hidden"
+                                   name="geography"
+                                   ng-model="form.geographyid"
+                                   validator="required"
+                                   valid-method="submit,blur"
+                                   required-error-message="Please select a City"
+                                   message-id="cityError"
+                            />
+                            <div id="cityError"></div>
+                          </div>
+                        </div>
+                      </div>
+
+
+                      <div class="row">
+                        <div class="col-sm-4 form-group">
+                          <label for="ageRange"
+                                 class="control-label">
+                            Age Range
+                          </label>
+                          <!--- UI Select Element  -->
+                          <ui-select multiple
+                                     ng-model="form.agerange"
+                                     theme="bootstrap"
+                                     ng-disabled="ctrl.disabled"
+                                     close-on-select="false"
+                                     class="ui-select"
+                                     title="Select an Age Range"
+                                     remove-selected="false"
+                                     id="ageRange"
+                          >
+                            <ui-select-match placeholder="Select an Age Range...">
+                              {{$item.ageGroup}}
+                            </ui-select-match>
+                            <ui-select-choices
+                              repeat="obj in formData.ageGroup | propsFilter: {ageGroup: $select.search, id:$select.search }">
+                              <div ng-bind-html="obj.ageGroup | highlight: $select.search"></div>
+                            </ui-select-choices>
+                          </ui-select>
+                          <!--{{form.interestsegmentid}}-->
+                          <!--- UI Select Element / -->
+
+                          <input type="hidden"
+                                 name="ageGroup"
+                                 ng-model="form.agerange"
+                                 validator="required"
+                                 valid-method="submit,blur"
+                                 required-error-message="Please select an Age Range"
+                                 message-id="ageError"
+                          />
+                          <div id="ageError"></div>
+                        </div>
+
+
+                        <div class="col-sm-4">
+                          <div class="form-group">
+                            <label for="genderType"
+                                   class="control-label">
+                              Gender
+                            </label>
+                            <!--- UI Select Element  -->
+                            <ui-select multiple
+                                       ng-model="form.gender"
+                                       theme="bootstrap"
+                                       ng-disabled="ctrl.disabled"
+                                       close-on-select="false"
+                                       class="ui-select"
+                                       title="Select a Gender"
+                                       remove-selected="false"
+                                       id="genderType"
+                            >
+
+                              <ui-select-match placeholder="Select a Gender...">
+                                {{$item.genderType}}
+                              </ui-select-match>
+                              <ui-select-choices
+                                repeat="obj in formData.gender | propsFilter: {genderType: $select.search, id:$select.search }">
+                                <div ng-bind-html="obj.genderType | highlight: $select.search"></div>
+                              </ui-select-choices>
+                            </ui-select>
+                            <!--{{form.interestsegmentid}}-->
+                            <!--- UI Select Element / -->
+
+                            <input type="hidden"
+                                   name="gender"
+                                   ng-model="form.gender"
+                                   validator="required"
+                                   valid-method="submit,blur"
+                                   required-error-message="Please select a Gender"
+                                   message-id="genderError"
+                            />
+                            <div id="genderError"></div>
+                          </div>
+                        </div>
+
+
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label for="incomeLevel"
+                                   class="control-label">
+                              Income Range
+                            </label>
+                            <!--- UI Select Element  -->
+                            <ui-select multiple
+                                       ng-model="form.incomelevel"
+                                       theme="bootstrap"
+                                       ng-disabled="ctrl.disabled"
+                                       close-on-select="false"
+                                       class="ui-select"
+                                       title="Select a Income Level"
+                                       remove-selected="false"
+                                       id="incomeLevel"
+                            >
+                              <ui-select-match placeholder="Select an Income Level...">
+                                {{$item.name}}
+                              </ui-select-match>
+                              <ui-select-choices
+                                repeat="obj in incomeLevels | propsFilter: {name: $select.search, id:$select.search }">
+                                <div ng-bind-html="obj.name | highlight: $select.search"></div>
+                              </ui-select-choices>
+                            </ui-select>
+
+                            <input type="hidden"
+                                   name="incomeLevel"
+                                   ng-model="form.incomelevel"
+                                   validator="required"
+                                   valid-method="submit,blur"
+                                   required-error-message="Please select an Income Level"
+                                   message-id="incomeError"
+                            />
+                            <div id="incomeError"></div>
+
+                          </div>
+                        </div>
+                      </div>
+
+
+                      <div class="row">
+                        <div class="col-sm-12 form-group">
+                          <label for="device">
+                            Devices
+                          </label>
+                          <!--- UI Select Element  -->
+                          <ui-select multiple
+                                     ng-model="form.deviceid"
+                                     theme="bootstrap"
+                                     ng-disabled="ctrl.disabled"
+                                     close-on-select="false"
+                                     class="ui-select"
+                                     title="Select a Device "
+                                     remove-selected="false"
+                                     id="device"
+                          >
+                            <ui-select-match placeholder="Select a Device...">
+                              {{$item.deviceName}}
+                            </ui-select-match>
+                            <ui-select-choices
+                              repeat="device in formData.devicedata | propsFilter: {deviceName: $select.search, id:$select.search }">
+                              <div ng-bind-html="device.deviceName | highlight: $select.search"></div>
+                            </ui-select-choices>
+                          </ui-select>
+                          <!--{{form.interestsegmentid}}-->
+                          <!--- UI Select Element / -->
+
+                          <input type="hidden"
+                                 name="device"
+                                 ng-model="form.deviceid"
+                                 validator="required"
+                                 valid-method="submit,blur"
+                                 required-error-message="Please select a Device"
+                                 message-id="deviceError"
+                          />
+                          <div id="deviceError"></div>
+                        </div>
+                      </div>
+
+
+                      <div class="row">
+                        <div class="col-sm-12 form-group">
+                          <label for="operatingSystem">
+                            Operating Systems
+                          </label>
+                          <!--- UI Select Element  -->
+                          <ui-select multiple
+                                     ng-model="form.operatingsystemid"
+                                     theme="bootstrap"
+                                     ng-disabled="ctrl.disabled"
+                                     close-on-select="false"
+                                     class="ui-select"
+                                     title="Select a Operating System "
+                                     remove-selected="false"
+                                     id="operatingSystem"
+                          >
+                            <ui-select-match placeholder="Select a Operating System...">
+                              {{$item.operatingSystemName}}
+                            </ui-select-match>
+                            <ui-select-choices
+                              repeat="os in formData.osdata | propsFilter: {operatingSystemName: $select.search, id:$select.search }">
+                              <div ng-bind-html="os.operatingSystemName | highlight: $select.search"></div>
+                            </ui-select-choices>
+                          </ui-select>
+                          <!--{{form.interestsegmentid}}-->
+                          <!--- UI Select Element / -->
+
+                          <input type="hidden"
+                                 name="operatingSystem"
+                                 ng-model="form.operatingsystemid"
+                                 validator="required"
+                                 valid-method="submit,blur"
+                                 required-error-message="Please select a Operating System"
+                                 message-id="osError"
+                          />
+                          <div id="osError"></div>
+                        </div>
+                      </div>
+
+
+                      <div class="row">
+                      <div class="col-sm-12 form-group">
+                        <label for="resolutionid">
+                          Resolution
+                        </label>
+                        <!--- UI Select Element  -->
+                        <ui-select multiple
+                                   ng-model="form.resolutionid"
+                                   theme="bootstrap"
+                                   ng-disabled="ctrl.disabled"
+                                   close-on-select="false"
+                                   class="ui-select"
+                                   title="Select a Resolution"
+                                   remove-selected="false"
+                                   id="resolutionid"
+                        >
+                          <ui-select-match placeholder="Select a Resolution...">
+                            {{$item.resolution}}
+                          </ui-select-match>
+                          <ui-select-choices
+                            repeat="res in formData.resolution | propsFilter: {resolution: $select.search, id:$select.search }">
+                            <div ng-bind-html="res.resolution | highlight: $select.search"></div>
+                          </ui-select-choices>
+                        </ui-select>
+                        <!--{{form.interestsegmentid}}-->
+                        <!--- UI Select Element / -->
+
+                        <input type="hidden"
+                               name="resolutionid"
+                               ng-model="form.resolutionid"
+                               validator="required"
+                               valid-method="submit,blur"
+                               required-error-message="Please select a Resolution"
+                               message-id="resError"
+                        />
+                        <div id="resError"></div>
+                      </div>
+                    </div>
+
+
+
+
+                      <div class="row">
+                        <div class="form-group  col-sm-12 ">
+                          <label for="ClickTracker"
+                                 class="control-label">
+                            Tracker
+                          </label>
+                  <textarea class="form-control"
+                            placeholder="Enter details for Tracker"
+                            ng-model="form.clicktracker"
+                            aria-describedby="Tracker"
+                            id="ClickTracker"
+                            name="ClickTracker"
+                            placeholder="Enter details for Tracker"
+                            validator="required, text"
+                            valid-method="submit, keyup"
+                            required-error-message="Please enter details for Tracker"
+                            number-error-message="Please enter details for Tracker"
+                  >
+                  </textarea>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="form-group  col-sm-12 ">
+                          <label for="Comments"
+                                 class="control-label">
+                            Please add your comments (if any)
+                          </label>
+                  <textarea class="form-control"
+                            placeholder="Enter Comments"
+                            ng-model="form.comments"
+                            aria-describedby="Tracker"
+                            id="Comments"
+                            name="Comments"
+                            placeholder="Enter Comments"
+                            validator=" text"
+                            valid-method="submit, keyup"
+                            required-error-message="Enter Comments"
+                            number-error-message="Enter Comments"
+                  >
+                  </textarea>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+
+            <div class="row pt-20">
+              <div class="form-group  col-md-12">
+                <button type="submit"
+                        class="btn btn-primary submit-button ng-scope"
+                        ng-disabled="campaignForm.$invalid"
+                        ng-click="form.submit(campaignForm)"
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+
+            </div>
+
+            </span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

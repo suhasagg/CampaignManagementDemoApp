@@ -1,0 +1,130 @@
+<div class="panel panel-flat p-x-10">
+	<div class="panel-heading">
+		<h5 class="panel-title">Audience Breakdown</h5>
+	</div>
+
+	<div class="table controlsBlock">
+	<div class="row controls">
+		<div class="col-md-2">
+			<label>Channel </label>
+			<p class="input-group-inline">
+				<select class="form-control" name="campaignId" id="campaignId" ng-model="campaign_id">
+					<option value="all" selected>All</option>
+					<option ng-repeat="campaignid in campaignIds" value="{{campaignid}}">{{ campaignid }}</option>
+				</select>
+			</p>
+		</div>
+		<span  ng-controller="datePickerCtrl" class="datePickerCtrl" ng-init="init()">
+		<div class="col-md-2">
+			<label>Start Date</label>
+			<p class="input-group">
+				<input type="text" class="form-control ng-pristine ng-valid ng-isolate-scope ng-not-empty ng-valid-required ng-valid-date ng-touched" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="startDate" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" required="required" style="">
+				  <span class="input-group-btn">
+					<button type="button" class="btn btn-default" ng-click="open1()"><i class="icon-calendar2"></i></button>
+				  </span>
+			</p>
+		</div>
+		<div class="col-md-2">
+			<label>End Date</label>
+			<p class="input-group">
+				<input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="endDate" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
+				  <span class="input-group-btn">
+					<button type="button" class="btn btn-default" ng-click="open2()"><i class="icon-calendar2"></i></button>
+				  </span>
+			</p>
+		</div>
+		</span>
+		<div class="col-md-2 reloadBtn">
+			<label>&nbsp;</label>
+			<p class="input-group">
+				<button ng-click="updateChart()" class="btn updateBtn"></button>
+			</p>
+		</div>
+<!--		<div class="col-md-2 tablesBtn pull-right">
+			<label>&nbsp;</label>
+			<p>
+				<button class="btn btn-info btn-xs" ng-click="showTabularData()">Show Tabular Data</button>
+			</p>
+		</div>-->
+	</div>
+	</div>
+	<div class="chartsBlock campaign clearfix">
+		<div  class="tabs clearfix" id="chartTypes">
+			<span class="glyphicon glyphicon-chevron-right rightIco"></span>
+
+			<div>
+				<a ng-click="updateChart('reach')" class="reach col-md-1 text-nowrap">
+					<i class="icon-alignment-align"></i>
+					Reach
+				</a>
+				<a ng-click="updateChart('interest')" class="interest col-md-2 text-nowrap legitRipple" style="width:120px;">
+					<i class="icon-enter6"></i>
+					Interests
+				</a>
+				<a ng-click="updateChart('os')" class="os col-md-1 legitRipple" style="width:65px">
+					<i class="icon-laptop"></i>
+					OS
+				</a>
+				<a ng-click="updateChart('devices_n_brand')" class="devices_n_brand col-md-2 text-nowrap legitRipple ">
+					<i class="icon-mobile"></i>
+					Devices &amp; Brands
+				</a>
+				<a ng-click="updateChart('geographic')" class="geographic col-md-1 legitRipple" style="width:72px;">
+					<i class="icon-earth"></i>
+					Geo
+				</a>
+				<a ng-click="updateChart('demographics')" class="demographics col-md-2 legitRipple" style="width: 158px;">
+					<i class="icon-man-woman"></i>
+					Demographics
+				</a>
+				<a ng-click="updateChart('timeOfTheDay')" class="timeOfTheDay col-md-2 legitRipple">
+					<i class="icon-watch2"></i>
+					Time of The Day
+				</a>
+				<a ng-click="updateChart('isp')" class="isp col-md-1 legitRipple" style="width:65px;">
+					<i class="icon-lan"></i>
+					ISP
+				</a>
+				<a ng-click="updateChart('orgnisation')" class="orgnisation col-md-1 legitRipple">
+					<i class="icon-mention"></i>
+					Org
+				</a>
+			</div>
+		</div>
+
+		<div class="charts reports publisher" id="charts">
+			<div  id="chart1" class="chart1">
+				<span class="glyphicon glyphicon-chevron-right rightIco"></span>
+				<div class="svgBlock"></div>
+			</div>
+			<div  id="chart2" class="chart2">
+				<span class="glyphicon glyphicon-chevron-right rightIco"></span>
+				<div class="svgBlock"></div>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="tableBlock">
+		<div  class="tabs clearfix" id="demographicTableTabs">
+			<a ng-click="updateTabularData('ageRange')" class="ageRange">
+				Age Range
+			</a>
+			<a ng-click="updateTabularData('gender')" class="gender">
+				Gender
+			</a>
+		</div>
+
+		<div  class="tabs clearfix" id="brand_DevicesTableTabs">
+			<a ng-click="updateTabularData('devices')" class="devices">
+				Devices
+			</a>
+			<a ng-click="updateTabularData('brands')" class="brands">
+				Brands
+			</a>
+		</div>
+
+		<div class="table-responsive" ng-include src="'views/tabular.html'"></div>
+
+	</div>
+</div>

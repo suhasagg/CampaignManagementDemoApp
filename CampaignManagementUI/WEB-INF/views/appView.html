@@ -1,0 +1,79 @@
+<!-- Page content -->
+<div class="page-content">
+
+  <!-- Main sidebar -->
+  <div class="sidebar sidebar-main"
+       ui-view="mainSidebar">
+  </div>
+  <!-- /main sidebar -->
+
+  <!-- Main content -->
+  <div class="content-wrapper">
+    <!-- Page header -->
+    <div class="page-header">
+
+      <!-- Content area -->
+      <div class="content">
+        <ui-view name="content"></ui-view>
+      </div>
+      <!-- /content area -->
+    </div>
+    <!-- /main content -->
+  </div>
+  <!-- /page content -->
+
+</div>
+<!-- Footer -->
+<div class="container clearfix footer text-muted">
+  &copy; 2016 <a href="http://www.cuberoot.co"
+                 target="_blank">Cuberoot Ltd.</a>
+</div>
+<!-- /footer -->
+
+<!-- applicationMessage View --->
+<script type="text/ng-template"
+        id="applicationMessage">
+  <div class="modal-header">
+    <h3 class="modal-title">Message</h3>
+  </div>
+  <div class="modal-body">
+
+    <div ng-class="{ 'alert': appViewMsg, 'alert-success': appViewMsg.type === 'success', 'alert-danger': appViewMsg.type === 'error' }"
+         ng-if="appViewMsg"
+         ng-bind="appViewMsg.message"></div>
+
+  </div>
+  <div class="modal-footer text-center">
+    <button class="btn btn-primary"
+            ng-click="ok();">Close
+    </button>
+  </div>
+</script>
+<!-- applicationMessage View /--->
+
+<!--- View Creative Template ---->
+<script type="text/ng-template"
+        id="viewCreative">
+  <div class="modal-body">
+    <div ng-if="type==='image'">
+      <img ng-src="{{opts.url}}"
+           class="width-100"
+           style="min-height:200px"
+
+      />
+    </div>
+
+    <div ng-if="type==='video'">
+      <embed embed-src="{{opts.url}}"
+             class="width-100"
+             style="min-height:200px"></embed>
+    </div>
+  </div>
+  <div class="modal-footer text-center">
+    <button class="btn btn-primary"
+            ng-click="ok();">Close
+    </button>
+  </div>
+</script>
+<!--- View Creative Template /---->
+

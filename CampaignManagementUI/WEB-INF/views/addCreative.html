@@ -1,0 +1,1370 @@
+<div class="panel panel-flat p-20 clearfix">
+  <div class="panel-heading">
+    <h5 class="panel-title"><i class="icon-arrow-left52 position-left cursor-pointer"
+                               ui-sref="appView.creatives.manage()"></i>
+      <span ng-if="editMode===true">Edit</span>
+      <span ng-if="!editMode">Add</span> Creative</h5>
+  </div>
+  <br/>
+  <div class="table">
+    <div class="row col-md-10">
+      <!--
+
+                  <form method="POST" enctype="multipart/form-data" action="https://creativedata.s3.amazonaws.com:443/">
+
+                      <input name="key" value="f8b5f41f71c85939126da487de9cde2e64151ed4.png" />
+
+                      <input name="AWSAccessKeyId" value="ASIAIQTPL3DQDY3R6W4Q" />
+                      <input name="acl" value="public-read" />
+                      <input name="policy" value="eyJleHBpcmF0aW9uIjogIjIwMTYtOS0xNlQyMDowMDowMC4wMDBaIiwiY29uZGl0aW9ucyI6IFt7ImJ1Y2tldCI6ICJjcmVhdGl2ZWRhdGEifSxbInN0YXJ0cy13aXRoIiwgIiRrZXkiLCAiIl0sWyJzdGFydHMtd2l0aCIsICIkQ29udGVudC1UeXBlIiwgIiJdLHsiYWNsIjogInB1YmxpYy1yZWFkIn0seyJ4LWFtei1zZWN1cml0eS10b2tlbiI6ICJGUW9EWVhkekVMNy8vLy8vLy8vLy93RWFERWxhc1hadHptR1MyNWUxdXlLckFTcmxzV2hnM0VLVGlhTHFqVEo3MU1CYWNKUHpiUzhBbnJqTWdaMlBUZ3ZmVG1xTTZOTW0xV2hXVDdOUDIxanVhNHJRSjJndk1YSGx1VVBMZmpFMzZYYVBkQ0M3RHpJcGdMbXB6dE5rSzZQRi9WZXVJTlNBempCeThQWXJwSWp5RVFrTlgrZElYa3l2TnVyWTI4VTAwdi9wWlV5RWlYT1pnVTJ2b0ZtbEZ6dDVnTnNuakNQQ0pkd0Q2a2xYRS9nalVZYU9uT1VpUjdYRWJYaGdPUktQYW5jZC9FUEFiQ3FhZkg4SU1DajdwT3ErQlE9PSJ9XX0=" />
+                      <input name="signature" value="lNo/jwsuPm2FRjVTOSM1rIDUPA4=" />
+                      <input name="Content-Type" value="image/png" />
+                      <input name="x-amz-security-token" value="FQoDYXdzEL7//////////wEaDElasXZtzmGS25e1uyKrASrlsWhg3EKTiaLqjTJ71MBacJPzbS8AnrjMgZ2PTgvfTmqM6NMm1WhWT7NP21jua4rQJ2gvMXHluUPLfjE36XaPdCC7DzIpgLmpztNkK6PF/VeuINSAzjBy8PYrpIjyEQkNX+dIXkyvNurY28U00v/pZUyEiXOZgU2voFmlFzt5gNsnjCPCJdwD6klXE/gjUYaOnOUiR7XEbXhgORKPancd/EPAbCqafH8IMCj7pOq+BQ==" />
+                      <input type="file" name="file" />
+                      <button type="submit">Submit</button>
+
+                  </form>
+
+      -->
+
+      <form ng-submit="form.submit(creativeForm)"
+            name="creativeForm"
+            novalidate="">
+
+
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label for="creativeName"
+                   class="control-label ">
+              Creative Name
+            </label>
+            <input class="form-control"
+                   ng-model="form.title"
+                   id="creativeName"
+                   name="creativeName"
+                   placeholder="Enter new Creative Name"
+                   validator="required, text"
+                   valid-method="submit, keyup"
+                   required-error-message="Please enter Creative Name"
+                   text-error-message="Please enter valid text for Creative Name"
+            >
+          </div>
+
+          <div class="form-group  col-md-6">
+            <label for="channelSelect"
+                   class="control-label">
+              Channel
+            </label>
+            <select class="form-control"
+                    ng-model="form.channelid"
+                    id="channelSelect"
+                    name="channel"
+                    validator="required"
+                    valid-method="submit text"
+                    required-error-message="Please Select one channel"
+                    ng-disabled="!!editMode"
+            >
+              <option ng-selected="true"
+                      ng-if="!editMode"
+                      value=''>Select an option
+              </option>
+              <option value="{{channel.id}}"
+                      ng-repeat="channel in creativeChannels">{{channel.channelName}}
+              </option>
+            </select>
+            <!--<label class="form-control disabled"
+                   ng-if="!!editMode">
+              <input type="hidden" ng-model="form.channelid" />
+              <input type="hidden" ng-model="form.channel" />
+              {{form.channel}}
+            </label>-->
+          </div>
+          <div id="channelError"></div>
+        </div>
+        <div class="row">
+          <div class="form-group  col-md-12">
+            <div>
+              <label for="Description"
+                     class="control-label ">
+                Description
+              </label>
+                  <textarea class="form-control"
+                            ng-model="form.Description"
+                            id="Description"
+                            name="Description"
+                            placeholder="Write description about creative"
+                            validator="required, text"
+                            valid-method="submit, keyup"
+                            required-error-message="Write description about creative"
+                            text-error-message="Write description about creative"
+                  > </textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group  col-sm-12 ">
+            <label for="ClickTracker"
+                   class="control-label">
+              Click Tracker
+            </label>
+                  <textarea class="form-control"
+                            placeholder="Enter details for Click Tracker"
+                            ng-model="form.clicktracker"
+                            id="ClickTracker"
+                            name="ClickTracker"
+                            placeholder="Enter details for Click Tracker"
+                            validator="text"
+                            valid-method="submit, keyup"
+                            required-error-message="Please enter details for Click Tracker"
+                            number-error-message="Please enter details for Click Tracker"
+                  >
+                  </textarea>
+          </div>
+        </div>
+
+        <!--form.channelid: {{form.channelid}}-->
+        <div class="animate-switch-container"
+             ng-switch
+             on="form.channelid">
+          <!-- DBM Form -->
+          <div class="animate-switch"
+               ng-switch-when="3">
+            <div class="row">
+              <div class="form-group col-md-12">
+                <label for="DispThirdPartyTagUrl"
+                       class="control-label ">
+                  Third Party Tag
+                </label>
+                  <textarea
+                    class="form-control"
+                    id="DispThirdPartyTagUrl"
+                    name="DispThirdPartyTagUrl"
+                    ng-model="form.DispThirdPartyTagUrl"
+                    placeholder="Add a third party tag"
+                    validator="required, text"
+                    valid-method="submit, keyup"
+                    required-error-message="Add a third party tag"
+                    text-error-message="Add a third party tag"
+                    invalid-callback="error('image not attached.')"
+                  ></textarea>
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-md-3 col-xs-6">
+                <label>
+                  Creative Type
+                </label>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="form-group col-md-3 col-xs-6">
+                <div class="radio">
+                  <label><input type="radio"
+                                name="type"
+                                value="image"
+                                ng-model="form.creativeType"
+                  >Image</label>
+                  <input type="hidden"
+                         validator="required"
+                         name="creativeType"
+                         valid-method="submit"
+                         required-error-message="Please select a Creative Type"
+                         message-id="creativeTypeError"
+                         ng-model="form.creativeType"
+                  />
+                  <div id="creativeTypeError"></div>
+                </div>
+              </div>
+              <div class="form-group col-md-3 col-xs-6">
+                <div class="radio">
+                  <label><input type="radio"
+                                name="type"
+                                value="video"
+                                ng-model="form.creativeType"
+                  >Video</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row"
+                 ng-switch
+                 on="form.creativeType">
+              <div class="form-group  col-md-6"
+                   ng-switch-when="image">
+                <label for="DispUploadCreativeUrl"
+                       class="control-label">
+                  Image Creative
+                </label>
+                <label class="btn btn-default btn-file form-control select-file"
+                       id="DispUploadBlock"
+                       ng-if="!editMode"
+                >
+                  <input accept="image/*"
+                         name="DispUploadCreative"
+                         file-model="form.DispUploadCreativeUrl"
+                         size-model="form.size"
+                         type-model="form.type"
+                         set-file-data="fileToUpload = value;"
+                         type="file"
+                         id="DispUploadCreative"
+                         class="ng-hide"
+                         allowed-ext="gif,jpg,jpeg,png"
+                  />
+                  <span class="clickMsg">Click to Change </span>
+                </label>
+
+                <div class="text-grey-600 text-size-mini text-right"
+                     ng-if="!editMode">Allowed (GIF, JPG, PNG)
+                </div>
+                <input type="hidden"
+                       validator="required"
+                       valid-method="submit"
+                       required-error-message="Attach a creative image."
+                       text-error-message="Attach a creative image."
+                       id="DispUploadCreativeUrl"
+                       ng-model="form.DispUploadCreativeUrl"
+                       name="DispUploadCreativeUrl"
+                       message-id="DispUploadCreativeUrlError"
+                />
+                <span id="DispUploadCreativeUrlError"></span>
+
+                <label class="btn btn-default btn-file form-control select-file contentAdded"
+                       id="DispUploadBlock"
+                       ng-if="!!editMode"
+                >
+                  <img ng-src="{{form.DispUploadCreativeUrl}}" />
+                </label>
+              </div>
+              <div class="form-group  col-md-6"
+                   ng-switch-when="video">
+                <label for="DispUploadCreativeVideoUrl"
+                       class="control-label">
+                  Video Creative
+                </label>
+                <label class="btn btn-default btn-file form-control select-file"
+                       ng-if="!editMode">
+                  <input type="file"
+                         accept=".swf,video/*"
+                         id="DispUploadCreativeVideo"
+                         name="DispUploadCreativeVideo"
+                         file-model="form.DispUploadCreativeVideoUrl"
+                         size-model="form.size"
+                         type-model="form.type"
+
+                         class="ng-hide"
+                         allowed-ext="mpg,mpeg,ogg,webm,mp4,swf"
+                  >
+                  <span class="clickMsg">Click to Change </span>
+                </label>
+                <div class="text-grey-600 text-size-mini text-right"
+                     ng-if="!editMode">Allowed (MPG, MPEG, OGG, WEBM, MP4)
+                </div>
+                <input type="hidden"
+                       validator="required"
+                       valid-method="submit"
+                       required-error-message="Attach a creative video."
+                       text-error-message="Attach a creative video."
+                       id="DispUploadCreativeVideoUrl"
+                       ng-model="form.DispUploadCreativeVideoUrl"
+                       name="DispUploadCreativeVideoUrl"
+                       message-id="DispUploadCreativeVideoUrlError"
+                />
+                <span id="DispUploadCreativeVideoUrlError"></span>
+                <label class="btn btn-default btn-file form-control select-file contentAdded"
+                       ng-if="!!editMode"
+                >
+                  <img ng-src="{{form.DispUploadCreativeVideoUrl}}" />
+                </label>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="form-group  col-md-12">
+                <div>
+                  <label for="DispVastTagUrl"
+                         class="control-label ">
+                    VAST Tag
+                  </label>
+                <textarea class="form-control"
+                          id="DispVastTagUrl"
+                          name="DispVastTagUrl"
+                          ng-model="form.DispVastTagUrl"
+                          placeholder="Add Vast Tag"
+                          validator="required, text"
+                          valid-method="submit, keyup"
+                          required-error-message="Add a third party tag"
+                          text-error-message="Add a third party tag"
+                ></textarea>
+                  <div class="text-grey-600 text-size-mini text-right">Allowed vpaid / vast tag</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- DBM Form / -->
+
+
+          <!-- Facebook Form -->
+          <div class="animate-switch"
+               ng-switch-when="1"
+          >
+            <div class="row">
+              <div class="form-group  col-md-12">
+                <label for="facebookCreative"
+                       class="control-label ">
+                  Facebook Creative Type
+                </label>
+                <select class="form-control"
+                        ng-model="form.facebookCreative"
+                        id="facebookCreative"
+                        name="facebookCreative"
+                        validator="required"
+                        valid-method="submit"
+                        required-error-message="Please Select an option"
+                        ng-disabled="!!editMode"
+                >
+                  <option ng-selected="true"
+                          ng-if="!editMode"
+                          value='? undefined:undefined ?'>Select an option
+                  </option>
+                  <option value="newsfeed">NewsFeeds</option>
+                  <option value="RHS">Right Hand Side Ad</option>
+                  <option value="mobile">Mobile Ad</option>
+                  <option value="video">Video Ad</option>
+                </select>
+              </div>
+            </div>
+
+
+            <div class=" animate-switch-container"
+                 ng-switch
+                 on="form.facebookCreative">
+              <!-- FB NewsFeed Form -->
+              <div class="animate-switch"
+                   ng-switch-when="newsfeed">
+                <div class="row">
+                  <div class="form-group col-md-12">
+                    <label for="NewsFeedTitle"
+                           class="control-label ">
+                      Title
+                    </label>
+                    <input class="form-control"
+                           ng-model="form.NewsFeedTitle"
+                           id="NewsFeedTitle"
+                           name="NewsFeedTitle"
+                           placeholder="Enter New Feed Title"
+                           validator="required, text"
+                           valid-method="submit, keyup"
+                           required-error-message="Please Enter New Feed Title"
+                           text-error-message="Please Enter New Feed Title"
+                    >
+                  </div>
+                </div>
+                <div class="row">
+
+
+                  <div class="form-group  col-md-12">
+                    <label for="NewsFeedCreativeBlock"
+                           class="control-label">
+                      Image Creative
+                    </label>
+                    <label class="btn btn-default btn-file form-control select-file"
+                           ng-if="!editMode">
+
+                      <input accept="image/*"
+                             type="file"
+                             class="ng-hide"
+                             allowed-ext="gif,jpg,jpeg,png"
+                             id="NewsFeedCreativeBlock"
+                             name="NewsFeedCreative"
+                             file-model="form.NewsFeedCreativeUrl"
+                             size-model="form.size"
+                             type-model="form.type"
+
+                      />
+                      <span class="clickMsg">Click to Change </span>
+                    </label>
+                    <div class="text-grey-600 text-size-mini text-right"
+                         ng-if="!editMode">Allowed (GIF, JPG, PNG)
+                    </div>
+                    <input type="hidden"
+                           validator="required"
+                           valid-method="submit"
+                           required-error-message="Attach a creative image."
+                           text-error-message="Attach a creative image."
+                           id="NewsFeedCreativeUrl"
+                           ng-model="form.NewsFeedCreativeUrl"
+                           name="NewsFeedCreativeUrl"
+                           message-id="NewsFeedCreativeUrlError"
+                    />
+                    <span id="NewsFeedCreativeUrlError"></span>
+
+                    <label class="btn btn-default btn-file form-control select-file contentAdded"
+                           ng-if="!!editMode"
+                    >
+                      <img ng-src="{{form.NewsFeedCreativeUrl}}"
+                      />
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!-- FB NewsFeed Form -->
+
+
+              <!-- FB RHS Form -->
+              <div class="animate-switch"
+                   ng-switch-when="RHS">
+                <div class="row">
+                  <div class="form-group  col-md-6">
+                    <label for="fbRHSTitle"
+                           class="control-label">
+                      Title
+                    </label>
+                    <input class="form-control"
+                           ng-model="form.fbRHSTitle"
+                           id="fbRHSTitle"
+                           name="fbRHSTitle"
+                           placeholder="Enter a title"
+                           validator="required, text"
+                           valid-method="submit, keyup"
+                           required-error-message="Please enter mini description"
+                           text-error-message="Please enter valid text for mini description"
+                    >
+                  </div>
+                  <div class="form-group  col-md-6">
+                    <label for="fbRHSMiniDescription"
+                           class="control-label">
+                      Mini Description
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      ng-model="form.fbRHSMiniDescription"
+                      id="fbRHSMiniDescription"
+                      name="fbRHSMiniDescription"
+                      placeholder="Enter a mini description"
+                      validator="required, text"
+                      valid-method="submit, keyup"
+                      required-error-message="Please enter mini description"
+                      text-error-message="Please enter valid text for mini description"
+                    >
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group  col-md-12">
+                    <label for="fbRHSDescription"
+                           class="control-label">
+                      Description about Facebook RHS Ad
+                    </label>
+                    <textarea
+                      class="form-control"
+                      ng-model="form.fbRHSDescription"
+                      id="fbRHSDescription"
+                      name="fbRHSDescription"
+                      placeholder="Write description about creative"
+                      validator="required, text"
+                      valid-method="submit, keyup"
+                      required-error-message="Please enter mini description"
+                      text-error-message="Please enter valid text for mini description"
+                    > </textarea>
+                  </div>
+
+                </div>
+
+                <div class="row">
+                  <div class="form-group  col-md-12">
+                    <label for="fbRHSCreative"
+                           class="control-label">
+                      Upload Image for Facebook RHS Ad
+                    </label>
+
+                    <label class="btn btn-default btn-file form-control select-file"
+                           id="DispUploadBlock"
+                           ng-if="!editMode">
+                      <input accept="image/*"
+                             name="fbRHSCreative"
+                             file-model="form.fbRHSCreativeUrl"
+                             size-model="form.size"
+                             type-model="form.type"
+
+                             type="file"
+                             id="fbRHSCreative"
+                             class="ng-hide"
+                             allowed-ext="gif,jpg,jpeg,png"
+                      />
+                      <span class="clickMsg">Click to Change </span>
+                    </label>
+                    <div class="text-grey-600 text-size-mini text-right"
+                         ng-if="!editMode">Allowed (GIF, JPG, PNG)
+                    </div>
+                    <input type="hidden"
+                           validator="required"
+                           valid-method="submit"
+                           required-error-message="Attach a creative image."
+                           text-error-message="Attach a creative image."
+                           id="fbRHSCreativeUrl"
+                           ng-model="form.fbRHSCreativeUrl"
+                           name="fbRHSCreativeUrl"
+                           message-id="fbRHSCreativeUrlError"
+                    />
+                    <span id="fbRHSCreativeUrlError"></span>
+                    <label class="btn btn-default btn-file form-control select-file contentAdded"
+                           ng-if="!!editMode"
+                    >
+                      <img ng-src="{{form.fbRHSCreativeUrl}}" />
+                    </label>
+
+                  </div>
+
+                </div>
+              </div>
+              <!-- FB RHS Form / -->
+
+              <!-- FB Mobile Form -->
+              <div class="animate-switch"
+                   ng-switch-when="mobile">
+                <div class="row">
+                  <div class="form-group col-md-12">
+                    <label for="fbMobileAdTitle"
+                           class="control-label ">
+                      Title
+                    </label>
+                    <input class="form-control"
+                           ng-model="form.fbMobileAdTitle"
+                           id="fbMobileAdTitle"
+                           validator="required, text"
+                           valid-method="submit"
+                           required-error-message="Please enter title for Mobile Ad"
+                           text-error-message="Please enter title for Mobile Ad"
+                           name="fbMobileAdTitle"
+                           placeholder="Enter a title">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group  col-md-12">
+                    <label for="fbMobileAdCreativeUrl"
+                           class="control-label">
+                      Upload Video for Facebook Mobile Ad
+                    </label>
+
+                    <label class="btn btn-default btn-file form-control select-file"
+                           id="fbMobileAdCreativeBlock"
+                           ng-if="!editMode">
+                      <input accept=".swf,video/*"
+                             name="fbMobileAdCreative"
+                             file-model="form.fbMobileAdCreativeUrl"
+                             size-model="form.size"
+                             type-model="form.type"
+
+                             type="file"
+                             id="fbMobileAdCreative"
+                             class="ng-hide"
+                             allowed-ext="mpg,mpeg,ogg,webm,mp4,swf"
+                      />
+                      <span class="clickMsg">Click to Change </span>
+                    </label>
+                    <div class="text-grey-600 text-size-mini text-right"
+                         ng-if="!editMode">Allowed (MPG, MPEG, OGG, WEBM, MP4)
+                    </div>
+                    <input type="hidden"
+                           validator="required"
+                           valid-method="submit"
+                           required-error-message="Attach a creative video."
+                           text-error-message="Attach a creative video."
+                           id="fbMobileAdCreativeUrl"
+                           ng-model="form.fbMobileAdCreativeUrl"
+                           name="fbMobileAdCreativeUrl"
+                           message-id="fbMobileAdCreativeUrlError"
+                    />
+                    <span id="fbMobileAdCreativeUrlError"></span>
+                    <label class="btn btn-default btn-file form-control select-file contentAdded"
+                           ng-if="!!editMode"
+                    >
+                      <embed ng-src="{{form.fbMobileAdCreativeUrl}}"></embed>
+                    </label>
+
+                  </div>
+                </div>
+              </div>
+              <!-- FB Mobile Form / -->
+
+              <!-- FB Video Form -->
+              <div class="animate-switch"
+                   ng-switch-when="video">
+
+                <div class="row">
+                  <div class="col-md-3 col-xs-6">
+                    <label>
+                      Creative Type
+                    </label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-md-3 col-xs-6">
+                    <div class="radio">
+                      <label><input type="radio"
+                                    name="fbVideo"
+                                    value="slideshow"
+                                    ng-model="fbVideoType">Slideshow</label>
+                    </div>
+                    <input type="hidden"
+                           validator="required"
+                           name="fbVideoType"
+                           valid-method="submit"
+                           required-error-message="Please select a Creative Type"
+                           message-id="fbVideoTypeError"
+                           ng-model="fbVideoType"
+                    />
+                    <div id="fbVideoTypeError"></div>
+                  </div>
+                  <div class="form-group col-md-3 col-xs-6">
+                    <div class="radio">
+                      <label><input type="radio"
+                                    name="fbVideo"
+                                    value="video"
+                                    ng-model="fbVideoType">Video</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class=" animate-switch-container"
+                     ng-switch
+                     on="fbVideoType">
+                  <!-- FB Slideshow Form -->
+                  <div class="animate-switch"
+                       ng-switch-when="slideshow">
+                    <label for="fbSlideShowUrls"
+                           class="control-label">
+                      Upload 3 Images for SlideShow
+                    </label>
+
+                    <div class="slideshowImgs">
+                      <label class="btn btn-default btn-file form-control select-file"
+                             ng-if="!editMode">
+                        <input type="file"
+                               accept="image/*"
+                               id="fbSlideShow"
+                               name="fbSlideShow"
+                               file-model="slideshow.fbSlideShowUrl1"
+                               class="ng-hide"
+                               allowed-ext="gif,jpg,jpeg,png"
+                               callback="setFbSlideShowUrls"
+                               index="1"
+                        >{{fbSlideShowUrl1}}
+                        <span class="clickMsg">Click to Change </span>
+                      </label>
+                      <label class="btn btn-default btn-file form-control select-file"
+                             ng-if="!editMode">
+                        <input type="file"
+                               accept="image/*"
+                               id="fbSlideShow"
+                               name="fbSlideShow"
+                               file-model="slideshow.fbSlideShowUrl2"
+                               class="ng-hide"
+                               allowed-ext="gif,jpg,jpeg,png"
+                               callback="setFbSlideShowUrls"
+                               ng-disabled="!slideshow.fbSlideShowUrl1"
+                               index="2"
+                        >
+                        <span class="clickMsg">Click to Change </span>
+                      </label>
+                      <label class="btn btn-default btn-file form-control select-file"
+                             ng-if="!editMode">
+                        <input type="file"
+                               accept="image/*"
+                               id="fbSlideShow"
+                               name="fbSlideShow"
+                               file-model="slideshow.fbSlideShowUrl3"
+                               class="ng-hide"
+                               allowed-ext="gif,jpg,jpeg,png"
+                               callback="setFbSlideShowUrls"
+                               ng-disabled="!slideshow.fbSlideShowUrl2"
+                               index="3"
+                        >
+                        {{fbSlideShowUrl3}}
+                        <span class="clickMsg">Click to Change </span>
+                      </label>
+                    </div>
+                    <div class="text-grey-600 text-size-mini text-right"
+                         ng-if="!editMode">Allowed (GIF, JPG, PNG)
+                    </div>
+                    <input
+                      type="hidden"
+                      validator="required"
+                      valid-method="submit"
+                      required-error-message="Attach Images for Slideshow."
+                      text-error-message="Attach Images for Slideshow."
+                      id="fbSlideShowUrls"
+                      ng-model="form.fbSlideShowUrls"
+                      name="fbSlideShowUrls"
+                      message-id="fbSlideShowUrlsError"
+
+                    />
+                    <!--
+                    ng-value="{{form.fbSlideShowUrl1}},{{form.fbSlideShowUrl2}},{{form.fbSlideShowUrl3}}"
+                    -->
+                    <span id="fbSlideShowUrlsError"></span>
+
+
+                  </div>
+                  <!-- FB Slideshow Form -->
+                  <!-- FB Video Form -->
+                  <div class="animate-switch"
+                       ng-switch-when="video">
+                    <label for="fbVideoUrl"
+                           class="control-label">
+                      Upload Video
+                    </label>
+
+                    <label class="btn btn-default btn-file form-control select-file"
+                           ng-if="!editMode">
+                      <input type="file"
+                             accept=".swf,video/*"
+                             id="fbVideo"
+                             name="fbVideo"
+                             file-model="form.fbVideoUrl"
+                             size-model="form.size"
+                             type-model="form.type"
+
+                             class="ng-hide"
+                             allowed-ext="mpg,mpeg,ogg,webm,mp4,swf"
+                      >
+                      <span class="clickMsg">Click to Change </span>
+                    </label>
+                    <div class="text-grey-600 text-size-mini text-right"
+                         ng-if="!editMode">Allowed (MPG, MPEG, OGG, WEBM, MP4)
+                    </div>
+                    <input type="hidden"
+                           validator="required"
+                           valid-method="submit"
+                           required-error-message="Attach a creative video."
+                           text-error-message="Attach a creative video."
+                           id="fbVideoUrl"
+                           ng-model="form.fbVideoUrl"
+                           name="fbVideoUrl"
+                           message-id="fbVideoUrlError"
+                    />
+                    <span id="fbVideoUrlError"></span>
+                    <label class="btn btn-default btn-file form-control select-file contentAdded"
+                           ng-if="!!editMode"
+                    >
+                      <embed ng-src="{{form.fbVideoUrl}}"> </embed>
+                    </label>
+                  </div>
+                  <!-- FB Video Form -->
+                </div>
+              </div>
+              <!-- FB Video Form / -->
+            </div>
+          </div>
+          <!-- Facebook Form / -->
+
+          <!-- Adwords Form -->
+          <div class="animate-switch"
+               ng-switch-when="2">
+            <div class="row">
+              <div class="form-group col-md-12">
+                <label for="DispThirdPartyTagUrl"
+                       class="control-label ">
+                  Third Party Tag
+                </label>
+                <textarea class="form-control"
+                          id="DispThirdPartyTagUrl"
+                          name="DispThirdPartyTagUrl"
+                          ng-model="form.DispThirdPartyTagUrl"
+                          placeholder="Add a third party tag"
+                          validator="required, text"
+                          valid-method="submit, keyup"
+                          required-error-message="Add a third party tag"
+                          text-error-message="Add a third party tag"
+                ></textarea>
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="form-group col-md-3 col-xs-6">
+                <div class="radio">
+                  <label><input type="radio"
+                                ng-model="form.creativeType"
+                                name="type"
+                                value="image"
+                                validator="required"
+                  >Image</label>
+                  <input type="hidden"
+                         valid-method="submit"
+                         required-error-message="Please select a Creative Type"
+                         ng-model="form.creativeType"
+                         name="creativeType"
+                         message-id="creativeTypeError"
+                         validator="required"
+                  />
+                  <div id="creativeTypeError"></div>
+                </div>
+              </div>
+              <div class="form-group col-md-3 col-xs-6">
+                <div class="radio">
+                  <label><input type="radio"
+                                name="type"
+                                value="video"
+                                ng-model="form.creativeType"
+                  >Video</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row"
+                 ng-switch
+                 on="form.creativeType">
+              <div class="form-group  col-md-12"
+                   ng-switch-when="image">
+
+                <label for="DispUploadCreativeUrl"
+                       class="control-label">
+                  Image Creative
+                </label>
+
+                <label class="btn btn-default btn-file form-control select-file"
+                       ng-if="!editMode">
+                  <input type="file"
+                         accept="image/*"
+                         id="DispUploadCreative"
+                         name="DispUploadCreative"
+                         file-model="form.DispUploadCreativeUrl"
+                         size-model="form.size"
+                         type-model="form.type"
+
+                         class="ng-hide"
+                         allowed-ext="gif,jpg,jpeg,png,jpeg"
+                  >
+                  <span class="clickMsg">Click to Change </span>
+                </label>
+                <div class="text-grey-600 text-size-mini text-right"
+                     ng-if="!editMode">Allowed (GIF, JPG, PNG)
+                </div>
+                <input type="hidden"
+                       validator="required"
+                       valid-method="submit"
+                       required-error-message="Attach a creative Image."
+                       text-error-message="Attach a creative Image."
+                       id="DispUploadCreativeUrl"
+                       ng-model="form.DispUploadCreativeUrl"
+                       name="DispUploadCreativeUrl"
+                       message-id="DispUploadCreativeUrlError"
+                />
+                <span id="DispUploadCreativeUrlError"></span>
+                <label class="btn btn-default btn-file form-control select-file contentAdded"
+                       ng-if="!!editMode"
+                >
+                  <embed ng-src="{{form.fbVideoUrl}}"> </embed>
+                </label>
+
+              </div>
+
+              <div class="form-group  col-md-12"
+                   ng-switch-when="video">
+                <label for="DispUploadCreativeVideoUrl"
+                       class="control-label">
+                  Video Creative
+                </label>
+
+                <label class="btn btn-default btn-file form-control select-file"
+                       ng-if="!editMode">
+                  <input type="file"
+                         accept=".swf,video/*"
+                         id="DispUploadCreativeVideo"
+                         name="DispUploadCreativeVideo"
+                         file-model="form.DispUploadCreativeVideoUrl"
+                         size-model="form.size"
+                         type-model="form.type"
+
+                         class="ng-hide"
+                         allowed-ext="mpg,mpeg,ogg,webm,mp4,swf"
+                  >
+                  <span class="clickMsg">Click to Change </span>
+                </label>
+                <div class="text-grey-600 text-size-mini text-right"
+                     ng-if="!editMode">Allowed (MPG, MPEG, OGG, WEBM, MP4)
+                </div>
+                <input type="hidden"
+                       validator="required"
+                       valid-method="submit"
+                       required-error-message="Attach a creative video."
+                       text-error-message="Attach a creative video."
+                       id="DispUploadCreativeVideoUrl"
+                       ng-model="form.DispUploadCreativeVideoUrl"
+                       name="DispUploadCreativeVideoUrl"
+                       message-id="DispUploadCreativeVideoUrlError"
+                />
+                <span id="DispUploadCreativeVideoUrlError"></span>
+                <label class="btn btn-default btn-file form-control select-file contentAdded"
+                       ng-if="!!editMode"
+                >
+                  <embed ng-src="{{form.DispUploadCreativeVideoUrl}}"> </embed>
+                </label>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="form-group  col-md-12">
+                <div>
+                  <label for="DispVastTagUrl"
+                         class="control-label ">
+                    VAST Tag
+                  </label>
+                  <textarea
+                    class="form-control"
+                    id="DispVastTagUrl"
+                    name="DispVastTagUrl"
+                    ng-model="form.DispVastTagUrl"
+                    placeholder="Add Vast Tag"
+                    validator="required, text"
+                    valid-method="submit, keyup"
+                    required-error-message="Add a third party tag"
+                    text-error-message="Add a third party tag"
+                  ></textarea>
+                  <div class="text-grey-600 text-size-mini text-right">Allowed vpaid / vast tag</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Adwords Form / -->
+
+          <!-- SMS Form -->
+          <div class="animate-switch"
+               ng-switch-when="5">
+            <div class="row">
+              <div class="form-group  col-md-12">
+                <div>
+                  <label for="smsText"
+                         class="control-label ">
+                    Write SMS Text
+                  </label>
+                    <textarea
+                      class="form-control"
+                      ng-model="form.smsText"
+                      id="smsText"
+                      name="smsText"
+                      placeholder="Write SMS Text"
+                      style=""
+                      validator="required, text"
+                      valid-method="submit, keyup"
+                      required-error-message="Please Write SMS Text"
+                      text-error-message="Please Write SMS Text"
+
+                    > </textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- SMS Form / -->
+
+          <!-- emailer Form -->
+          <div class="animate-switch"
+               ng-switch-when="4">
+
+
+            <div class="row">
+              <div class="col-md-3 col-xs-6">
+                <label>
+                  Creative Type
+                </label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-md-3 col-xs-6">
+                <div class="radio">
+                  <label><input type="radio"
+                                ng-model="form.creativeType"
+                                name="type"
+                                value="image"
+                                validator="required"
+                  >Image</label>
+                  <input type="hidden"
+                         valid-method="submit"
+                         required-error-message="Please select a Creative Type"
+                         ng-model="form.creativeType"
+                         name="creativeType"
+                         message-id="creativeTypeError"
+                         validator="required"
+                  />
+                  <div id="creativeTypeError"></div>
+                </div>
+              </div>
+              <div class="form-group col-md-3 col-xs-6">
+                <div class="radio">
+                  <label><input type="radio"
+                                name="type"
+                                value="TextHtml"
+                                ng-model="form.creativeType"
+                  >Text / HTML</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row"
+                 ng-switch
+                 on="form.creativeType">
+              <div class="form-group  col-md-12"
+                   ng-switch-when="TextHtml">
+                <div>
+                  <label for="EmailMrktTextHTML"
+                         class="control-label ">
+                    Email Marketing text / HTML
+                  </label>
+                            <textarea
+                              class="form-control"
+                              ng-model="form.EmailMrktTextHTML"
+                              id="EmailMrktTextHTML"
+                              name="EmailMrktTextHTML"
+                              placeholder="Provide Email Marketing text / HTML"
+                              validator="required, text"
+                              valid-method="submit, keyup"
+                              required-error-message="Provide Email Marketing text / HTML"
+                              text-error-message="Provide Email Marketing text / HTML"
+                            > </textarea>
+                </div>
+              </div>
+              <div class="form-group  col-md-12"
+                   ng-switch-when="image">
+                <label for="EmailMrktImageUrl"
+                       class="control-label">
+                  Upload Image for Email Marketing
+                </label>
+
+                <label class="btn btn-default btn-file form-control select-file"
+                       ng-if="!editMode">
+                  <input type="file"
+                         accept="image/*"
+                         id="EmailMrktImage"
+                         name="EmailMrktImage"
+                         file-model="form.EmailMrktImageUrl"
+                         size-model="form.size"
+                         type-model="form.type"
+
+                         class="ng-hide"
+                         allowed-ext="gif,jpg,jpeg,png,jpeg"
+                  >
+                  <span class="clickMsg">Click to Change </span>
+                </label>
+                <div class="text-grey-600 text-size-mini text-right"
+                     ng-if="!editMode">Allowed (GIF, JPG, PNG)
+                </div>
+                <input type="hidden"
+                       validator="required"
+                       valid-method="submit"
+                       required-error-message="Attach a creative image."
+                       text-error-message="Attach a creative image."
+                       id="EmailMrktImageUrl"
+                       ng-model="form.EmailMrktImageUrl"
+                       name="EmailMrktImageUrl"
+                       message-id="EmailMrktImageUrlError"
+                />
+                <span id="EmailMrktImageUrlError"></span>
+                <label class="btn btn-default btn-file form-control select-file contentAdded"
+                       ng-if="!!editMode"
+                >
+                  <img ng-src="{{form.EmailMrktImageUrl}}"> </img>
+                </label>
+
+              </div>
+            </div>
+          </div>
+          <!-- emailer Form / -->
+
+          <!-- WhatsApp Form -->
+          <div class="animate-switch"
+               ng-switch-when="6">
+            <div class="row">
+              <div class="form-group  col-md-12">
+                <div>
+                  <label for="WhatsAppAdText"
+                         class="control-label ">
+                    Description
+                  </label>
+                            <textarea class="form-control"
+                                      ng-model="form.WhatsAppAdText"
+                                      id="WhatsAppAdText"
+                                      name="WhatsAppAdText"
+                                      placeholder="Provide WhatsApp Ad text"
+                                      style=""
+                                      validator="required, text"
+                                      valid-method="submit, keyup"
+                                      required-error-message="Provide Email Marketing text / HTML"
+                                      text-error-message="Provide Email Marketing text / HTML"
+                            > </textarea>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-md-3 col-xs-6">
+                <label>
+                  Creative Type
+                </label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-md-3 col-xs-6">
+                <div class="radio">
+                  <label><input type="radio"
+                                ng-model="form.creativeType"
+                                name="type"
+                                value="image"
+                                validator="required"
+                  >Image</label>
+                  <input type="hidden"
+                         valid-method="submit"
+                         required-error-message="Please select a Creative Type"
+                         ng-model="form.creativeType"
+                         name="creativeType"
+                         message-id="creativeTypeError"
+                         validator="required"
+                  />
+                  <div id="creativeTypeError"></div>
+                </div>
+              </div>
+              <div class="form-group col-md-3 col-xs-6">
+                <div class="radio">
+                  <label><input type="radio"
+                                name="type"
+                                value="video"
+                                ng-model="form.creativeType"
+                  >Video</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row"
+                 ng-switch
+                 on="form.creativeType">
+
+
+              <div class="form-group  col-md-12"
+                   ng-switch-when="image">
+                <label for="WhatsAppAdImageUrl"
+                       class="control-label">
+                  Upload an image for WhatsApp Ad
+                </label>
+
+                <label class="btn btn-default btn-file form-control select-file"
+                       ng-if="!editMode">
+                  <input type="file"
+                         accept="image/*"
+                         id="WhatsAppAdImage"
+                         name="WhatsAppAdImage"
+                         file-model="form.WhatsAppAdImageUrl"
+                         size-model="form.size"
+                         type-model="form.type"
+
+                         class="ng-hide"
+                         allowed-ext="gif,jpg,jpeg,png,jpeg"
+                  >
+                  <span class="clickMsg">Click to Change </span>
+                </label>
+                <div class="text-grey-600 text-size-mini text-right"
+                     ng-if="!editMode">Allowed (GIF, JPG, PNG)
+                </div>
+                <input type="hidden"
+                       validator="required"
+                       valid-method="submit"
+                       required-error-message="Attach a creative video."
+                       text-error-message="Attach a creative video."
+                       id="WhatsAppAdImageUrl"
+                       ng-model="form.WhatsAppAdImageUrl"
+                       name="WhatsAppAdImageUrl"
+                       message-id="WhatsAppAdImageUrlError"
+                />
+                <span id="WhatsAppAdImageUrlError"></span>
+                <label class="btn btn-default btn-file form-control select-file contentAdded"
+                       ng-if="!!editMode"
+                >
+                  <img ng-src="{{form.WhatsAppAdImageUrl}}"> </img>
+                </label>
+
+
+              </div>
+
+              <div class="form-group  col-md-12"
+                   ng-switch-when="video">
+                <label for="WhatsAppAdVideoUrl"
+                       class="control-label">
+                  Upload Video for WhatsApp
+                </label>
+
+                <label class="btn btn-default btn-file form-control select-file"
+                       ng-if="!editMode">
+                  <input type="file"
+                         accept=".swf,video/*"
+                         id="WhatsAppAdVideo"
+                         name="WhatsAppAdVideo"
+                         file-model="form.WhatsAppAdVideoUrl"
+                         size-model="form.size"
+                         type-model="form.type"
+
+                         class="ng-hide"
+                         allowed-ext="mpg,mpeg,ogg,webm,mp4,swf"
+                  >
+                  <span class="clickMsg">Click to Change </span>
+                </label>
+                <div class="text-grey-600 text-size-mini text-right"
+                     ng-if="!editMode">Allowed (MPG, MPEG, OGG, WEBM, MP4)
+                </div>
+                <input type="hidden"
+                       validator="required"
+                       valid-method="submit"
+                       required-error-message="Attach a creative video."
+                       text-error-message="Attach a creative video."
+                       id="WhatsAppAdVideoUrl"
+                       ng-model="form.WhatsAppAdVideoUrl"
+                       name="WhatsAppAdVideoUrl"
+                       message-id="WhatsAppAdVideoUrlError"
+                />
+                <span id="WhatsAppAdVideoUrlError"></span>
+
+                <label class="btn btn-default btn-file form-control select-file contentAdded"
+                       ng-if="!!editMode"
+                >
+                  <embed ng-src="{{form.WhatsAppAdVideoUrl}}"> </embed>
+                </label>
+              </div>
+            </div>
+          </div>
+          <!-- WhatsApp Form / -->
+
+          <!-- Content Form -->
+          <div class="animate-switch"
+               ng-switch-when="7">
+
+
+            <div class="row">
+              <div class="col-md-3 col-xs-6">
+                <label>
+                  Creative Type
+                </label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-md-3 col-xs-6">
+                <div class="radio">
+                  <label><input type="radio"
+                                ng-model="form.creativeType"
+                                name="type"
+                                value="image"
+                                validator="required"
+                  >Image</label>
+                  <input type="hidden"
+                         valid-method="submit"
+                         required-error-message="Please select a Creative Type"
+                         ng-model="form.creativeType"
+                         name="creativeType"
+                         message-id="creativeTypeError"
+                         validator="required"
+                  />
+                  <div id="creativeTypeError"></div>
+                </div>
+              </div>
+              <div class="form-group col-md-3 col-xs-6">
+                <div class="radio">
+                  <label><input type="radio"
+                                name="type"
+                                value="text"
+                                ng-model="form.creativeType"
+                  >Marketing Text</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row"
+                 ng-switch
+                 on="form.creativeType">
+
+
+              <div class="form-group  col-md-12"
+                   ng-switch-when="text">
+                <div>
+                  <label for="ContentMrktText"
+                         class="control-label ">
+                    Content Marketing text
+                  </label>
+                  <textarea
+                    class="form-control"
+                    ng-model="form.ContentMrktText"
+                    id="ContentMrktText"
+                    name="ContentMrktText"
+                    placeholder="Provide Content Marketing text"
+                    validator="required, text"
+                    valid-method="submit, keyup"
+                    required-error-message="Provide Content Marketing text"
+                    text-error-message="Provide Content Marketing text"
+                  > </textarea>
+                </div>
+              </div>
+              <div class="form-group  col-md-12"
+                   ng-switch-when="image">
+                <label for="ContentMrktText"
+                       class="control-label ">
+                  Content Marketing Image
+                </label>
+
+                <label class="btn btn-default btn-file form-control select-file"
+                       ng-if="!editMode">
+                  <input type="file"
+                         accept="image/*"
+                         id="ContentMrktImage"
+                         name="ContentMrktImage"
+                         file-model="form.ContentMrktImageUrl"
+                         size-model="form.size"
+                         type-model="form.type"
+
+                         class="ng-hide"
+                         allowed-ext="gif,jpg,jpeg,png,jpeg"
+                  >
+                  <span class="clickMsg">Click to Change </span>
+                </label>
+                <div class="text-grey-600 text-size-mini text-right"
+                     ng-if="!editMode">Allowed (GIF, JPG, PNG)
+                </div>
+                <input type="hidden"
+                       validator="required"
+                       valid-method="submit"
+                       required-error-message="Attach a creative video."
+                       text-error-message="Attach a creative video."
+                       id="ContentMrktImageUrl"
+                       ng-model="form.ContentMrktImageUrl"
+                       name="ContentMrktImageUrl"
+                       message-id="ContentMrktImageUrlError"
+                />
+                <span id="ContentMrktImageUrlError"></span>
+
+                <label class="btn btn-default btn-file form-control select-file contentAdded"
+                       ng-if="!!editMode"
+                >
+                  <img ng-src="{{form.ContentMrktImageUrl}}"> </img>
+                </label>
+
+              </div>
+            </div>
+          </div>
+          <!-- Content Form / -->
+        </div>
+        <div class="row">
+          <div class="form-group  col-md-12">
+            <button type="submit"
+                    class="btn btn-primary submit-button ng-scope"
+                    ng-disabled="creativeForm.$invalid">
+              Submit
+            </button>
+            <!--<button type="button" class="btn btn-default ng-scope" ng-click="reset()">Reset</button>-->
+          </div>
+        </div>
+      </form>
+      <!--<pre style="position: fixed; top:0; right: 0;">{{form | json}}</pre>-->
+
+    </div>
+  </div>
+</div>

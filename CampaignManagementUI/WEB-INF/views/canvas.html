@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+
+</head>
+<body>
+
+<canvas id="canv" width="800" height="1000"> </canvas>
+<script type="text/javascript">
+
+    // Define a regular polygon with n sides, centered at (x,y)
+    // with radius r. The vertices are equally spaced along the
+    // circumference of a circle. Put the first vertex straight
+    // up or at the specified angle. Rotate clockwise, unless
+    // the last argument is true.
+
+    var canv = document.getElementById("canv");
+    c = canv.getContext('2d');
+
+
+    function polygon(c,n,x,y,r,angle,counterclockwise) {
+        angle = angle || 0;
+        counterclockwise = counterclockwise || false;
+// Compute vertex position and begin a subpath there
+        c.moveTo(x + r*Math.sin(angle),
+                y - r*Math.cos(angle));
+        var delta = 2*Math.PI/n;
+        // Angle between vertices
+        for(var i = 1; i < n; i++) { // For remaining vertices
+// Compute angle of this vertex
+            angle += counterclockwise?-delta:delta;
+// Compute position of vertex and add a line to it
+            c.lineTo(x + r*Math.sin(angle),
+                    y - r*Math.cos(angle));
+        }
+        c.closePath(); // Connect last vertex back to the first
+    }
+
+
+    // Start a new path and add polygon subpaths
+    c.beginPath();
+    polygon(c, 3, 50, 70, 50);
+    // Triangle
+    polygon(c, 4, 150, 60, 50, Math.PI/4); // Square
+    polygon(c, 5, 255, 55, 50);
+    // Pentagon
+    polygon(c, 6, 365, 53, 50, Math.PI/6); // Hexagon
+    // Add a small counterclockwise square inside the hexagon
+    polygon(c, 4, 365, 53, 20, Math.PI/4, true);
+    // Set properties that control how the graphics will look
+    c.fillStyle = "#ccc";
+    // Light-gray interiors
+    c.strokeStyle = "#008"; // outlined with dark-blue lines
+    c.lineWidth = 5;
+    // five pixels wide.
+    // Now draw all the polygons (each in its own subpath)
+    c.fill();
+    // Fill the shapes
+    c.stroke();
+    // And stroke their outlines
+
+    c.beginPath();
+    c.moveTo(120,150);
+    c.lineTo(20, 400);
+    c.lineTo(440,500);
+    c.lineTo(550,650);
+    c.closePath();
+
+    c.lineTo(500,120);
+    c.lineTo(120,380);
+    c.fill();
+
+    c.stroke();
+
+
+
+
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+<div class="panel panel-flat p-x-10">
+	<div class="row controls">
+		<div class="col-md-2">
+			<label>Action </label>
+			<p class="input-group-inline">
+				<select class="form-control" name="campaignId" id="campaignId" ng-model="creativeActions">
+					<option value="all" selected>Select Action</option>
+					<option ng-repeat="action in creativeActions" value="{{action}}">{{ action }}</option>
+				</select>
+			</p>
+		</div>
+		<div class="col-md-3">
+			<p class="input-group">
+				<input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="dt" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
+				<span class="input-group-btn">
+					<button type="button" class="btn btn-default" ng-click="open1()"><i class="icon-calendar2"></i></button>
+				</span>
+			</p>
+		</div>
+		<div class="col-md-3">
+			<p class="input-group">
+				<input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="dt" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
+				<span class="input-group-btn">
+					<button type="button" class="btn btn-default" ng-click="open2()"><i class="icon-calendar2"></i></button>
+				</span>
+			</p>
+		</div>
+	</div>
+
+	<!-- Basic markup -->
+	<div class="chart-container">
+		<div class="chart" id="d3-streamgraph"></div>
+	</div>
+
+	<!-- With minimum width and scrolling -->
+	<div class="chart-container has-scroll">
+		<div class="chart has-minimum-width" id="d3-waterfall"></div>
+	</div>
+</div>

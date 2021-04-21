@@ -1,0 +1,89 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-flat p-20 m-20">
+            <h3 class="text-center">
+                Login
+            </h3>
+                <div ng-class="{ 'alert': flash, 'alert-success': flash.type === 'success', 'alert-danger': flash.type === 'error' }" ng-if="flash" ng-bind="flash.message"></div>
+
+                <form id="signInForm" class="form-horizontal"  method="POST" ng-submit="" name="signInForm" novalidate>
+                    <div class="form-group">
+                        <label for="username" class="col-sm-2 control-label">Username</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="username" name="username" ng-model="user.emailid" placeholder="Email"
+                           	 validator="required, email"
+                           	 valid-method="submit"
+                           required-error-message="Please enter your registered email id"
+                           email-error-message="Please enter a valid registered email id"
+        					>
+                        </div>
+                    </div>
+                    
+
+                    <div class="form-group">
+                        <label for="password" class="col-sm-2 control-label">Password</label>
+                        <div class="col-sm-10">
+                            <input type="password" ng-model="user.password" class="form-control" id="password" placeholder="Password"
+                               name="password"
+                            	validator="required"
+                            	valid-method="submit"
+                               required-error-message="Please enter your password."
+                            >
+                        </div>
+                    </div>
+<!--                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" class="valign-text-bottom" ng-model="user.rememberMe" > <span class="valign-text-bottom">Remember me</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>-->
+                    <div class="form-group text-center">
+                        <a href="#signup">Signup!</a> /
+                        <a ng-click="forgotPassword()">Forgot Password?</a>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-1 col-sm-10 text-center">
+                            <button type="submit" class="btn btn-default" ng-click="form.submit(signInForm)" >Sign in</button>
+                        </div>
+                    </div>
+                    <div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal view -->
+    <script type="text/ng-template" id="forgotPassword">
+        <div class="modal-header">
+            <h3 class="modal-title">Forgot Password?</h3>
+        </div>
+        <div class="modal-body">
+            <div ng-class="{ 'alert': forgotFlash, 'alert-success': forgotFlash.type === 'success', 'alert-danger': forgotFlash.type === 'error' }" ng-if="forgotFlash" ng-bind="forgotFlash.message"></div>
+            <form name="forgotForm" method="POST" id="forgotForm" class="form-horizontal ">
+            <div class="form-group">
+                <label for="inputForgotEmail" class="text-right col-sm-4 control-label">Username / Email</label>
+                <div class="col-sm-8">
+                    <input type="email" class="form-control" id="inputForgotEmail" placeholder="Please enter your email"
+                           name="forgotEmail"
+                           ng-model="user.emailid"
+                           validator="required, email"
+                           valid-method="submit"
+                           required-error-message="Please enter your email"
+                           email-error-message="Please enter a valid email id"
+                    >
+                </div>
+            </div>
+                <br/>
+            <div class="modal-footer text-center">
+                <button class="btn btn-primary"  ng-click="form.submit(forgotForm)">Reset my password</button>
+            </div>
+            </form>
+        </div>
+    </script>
+<!-- /Modal view -->

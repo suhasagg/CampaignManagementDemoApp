@@ -1,0 +1,336 @@
+<div class="panel panel-flat p-20 clearfix"
+     style="min-height:500px;">
+  <div class="panel-heading">
+    <h5 class="panel-title"><i class="icon-arrow-left52 position-left cursor-pointer"
+                               ui-sref="appView.campaigns.manage()"></i>
+      <span ng-if="editMode===true">Edit</span>
+      <span ng-if="!editMode"
+            data-toggle="tooltip"
+            title="Hooray">Add</span> Campaign</h5>
+  </div>
+  <br/>
+  <div class="table container">
+    <div class="row">
+      <div class="col-lg-10 col-sm-12">
+        <form name="campaignForm"
+              novalidate="">
+          <div class="row">
+            <div class="form-group col-sm-6">
+              <input type="hidden"
+                     id="id"
+                     name="id"
+                     value="form.id"/>
+              <label for="campaignName"
+                     class="control-label ">
+                Campaign Name
+              </label>
+              <input type="text"
+                     class="form-control"
+                     ng-model="form.name"
+                     id="campaignName"
+                     name="campaignName"
+                     placeholder="Enter new Campaign Name"
+                     validator="required, text"
+                     valid-method="submit, keyup"
+                     required-error-message="Please enter Campaign Name"
+                     text-error-message="Please enter valid text for Campaign Name"
+              >
+            </div>
+
+            <div class="form-group  col-sm-6">
+              <label for="objectiveSelect"
+                     class="control-label ">
+                Objective
+              </label>
+              <select
+                class="form-control"
+                ng-model="form.selectedObjective"
+                id="objectiveSelect"
+                name="objectiveSelect"
+                validator="required"
+                valid-method="submit, blur"
+                required-error-message="Please select an objective"
+                ng-change="setCampaignType()"
+                ng-disabled="!!editMode"
+                ng-if="!editMode"
+              >
+                <option ng-selected="true"
+                        ng-if="!editMode"
+                        value=''>Select an objective
+                </option>
+                <option value='{ "id": "{{obj.id}}", "campaignType": "{{obj.campaignType}}", "trackerType": "{{obj.trackerType}}" }'
+                        ng-repeat="obj in campaignObjectives">{{obj.objectiveName}}
+                </option>
+              </select>
+              <label class="form-control disabled"
+                     ng-if="!!editMode">
+                {{campaignTypeText }}
+                <input type="hidden" ng-model="form.objective"/>
+              </label>
+            </div>
+          </div>
+          <div ng-if="!!form.objective">
+            <div class="row">
+              <div class="form-group  col-sm-12 ">
+                <label for="ClickTracker"
+                       class="control-label">
+                  {{form.trackertype}}
+                </label>
+                  <textarea class="form-control"
+                            placeholder="Enter details for {{form.trackertype}}"
+                            ng-model="form.clicktracker"
+                            aria-describedby="{{form.trackertype}}"
+                            id="ClickTracker"
+                            name="ClickTracker"
+                            placeholder="Enter details for {{form.trackertype}}"
+                            validator="required, text"
+                            valid-method="submit, keyup"
+                            required-error-message="Please enter details for {{form.trackertype}}"
+                            number-error-message="Please enter details for {{form.trackertype}}"
+                  >
+                  </textarea>
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-sm-4 ">
+                <label for="campaignType"
+                       class="control-label">
+                  <h5>Campaign Type : <span ng-bind="form.campaigntype"></span></h5>
+                </label>
+                <input type="hidden"
+                       class="form-control"
+                       ng-model="form.campaigntype"
+                       aria-describedby="Campaign Type"
+                       id="campaignType"
+                       name="campaignType"
+                       disabled
+                />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12">
+                <h3>Duration</h3>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group  col-sm-12">
+                <div ng-controller="datePickerCtrl"
+                     class="table datePickerCtrl"
+                     ng-init="init()">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <label>Start Date</label>
+                      <p class="input-group">
+                        <input type="text"
+                               class="form-control ng-pristine ng-valid ng-isolate-scope ng-not-empty ng-valid-required ng-valid-date ng-touched"
+                               uib-datepicker-popup="dd-MMMM-yyyy"
+                               ng-model="startDate"
+                               is-open="popup1.opened"
+                               datepicker-options="dateOptions"
+                               ng-required="true"
+                               close-text="Close"
+                               alt-input-formats="altInputFormats"
+                               required="required"
+                               style=""
+                        >
+              <span class="input-group-btn">
+                <button type="button"
+                        class="btn btn-default"
+                        ng-click="open1()"><i class="icon-calendar2"></i></button>
+              </span>
+                      </p>
+                    </div>
+                    <div class="col-md-4">
+                      <label>End Date</label>
+                      <p class="input-group">
+                        <input type="text"
+                               class="form-control"
+                               uib-datepicker-popup="{{format}}"
+                               ng-model="endDate"
+                               is-open="popup2.opened"
+                               datepicker-options="dateOptions"
+                               ng-required="true"
+                               close-text="Close"
+                               alt-input-formats="altInputFormats"
+                        />
+              <span class="input-group-btn">
+                <button type="button"
+                        class="btn btn-default"
+                        ng-click="open2()"><i class="icon-calendar2"></i></button>
+              </span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-sm-12">
+                <h3>Budget</h3>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group  col-sm-4">
+                <label for="totalBudget"
+                       class="control-label">
+                  Total Budget
+                </label>
+                <div class="input-group">
+                  <span class="input-group-addon">&#8377;</span>
+                  <input type="text"
+                         class="form-control"
+                         aria-describedby="Total Budget"
+                         ng-model="form.totalbudget"
+                         id="totalBudget"
+                         name="totalBudget"
+                         placeholder="Enter Total Budget"
+                         validator="number, required"
+                         valid-method="submit, keyup"
+                         required-error-message="Enter Total Budget"
+                         number-error-message="Please enter valid amount for Total Budget"
+                         message-id="totalBudgetError"
+                  >
+                </div>
+                <div id="totalBudgetError"></div>
+
+              </div>
+              <div class="form-group  col-sm-4 ">
+                <label for="monthlyBudget"
+                       class="control-label">
+                  Monthly Cap
+                </label>
+                <div class="input-group">
+                  <span class="input-group-addon">&#8377;</span>
+                  <input type="text"
+                         class="form-control"
+                         ng-model="form.monthlycap"
+                         aria-describedby="Monthly Budget"
+                         id="monthlyBudget"
+                         name="monthlyBudget"
+                         placeholder="Enter Monthly Budget"
+                         validator="number, required"
+                         valid-method="submit, keyup"
+                         required-error-message="Enter Monthly Budget"
+                         number-error-message="Please enter valid amount for Monthly Budget"
+                         message-id="monthlyError"
+                  >
+                </div>
+                <span id="monthlyError"></span>
+              </div>
+              <div class="form-group  col-sm-4 ">
+                <label for="dailyBudget"
+                       class="control-label">
+                  Daily Cap
+                </label>
+                <div class="input-group">
+                  <span class="input-group-addon">&#8377;</span>
+                  <input type="text"
+                         class="form-control"
+                         ng-model="form.dailycap"
+                         aria-describedby="Daily Budget"
+                         id="dailyBudget"
+                         name="dailyBudget"
+                         placeholder="Enter Daily Budget"
+                         validator="required, number"
+                         valid-method="submit, keyup"
+                         required-error-message="Please enter  Daily Budget"
+                         number-error-message="Please enter valid amount for  Daily Budget"
+                         message-id="dailyBudgetError"
+                  />
+                </div>
+                <span id="dailyBudgetError"></span>
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="form-group  col-sm-4 ">
+                <label for="totalspend"
+                       class="control-label">
+                  Total Spend
+                </label>
+                <div class="input-group">
+                  <span class="input-group-addon">&#8377;</span>
+                  <div class="form-control"
+                       ng-bind="form.totalspend"
+                       aria-describedby="Max Bid"
+                       id="totalspend"
+                       name="totalspend"
+                       placeholder="Enter Total Spend"
+                  ></div>
+                </div>
+              </div>
+              <div class="form-group  col-sm-4 ">
+                <label for="maxbid"
+                       class="control-label">
+                  Max Bid
+                </label>
+                <div class="input-group">
+                  <span class="input-group-addon">&#8377;</span>
+                  <input class="form-control"
+                         ng-model="form.maxbid"
+                         aria-describedby="Max Bid"
+                         id="maxbid"
+                         name="maxbid"
+                         placeholder="Enter Max Bid"
+                         validator="required, number"
+                         valid-method="submit, keyup"
+                         required-error-message="Please enter Max Bid"
+                         number-error-message="Please enter valid amount for Max Bid"
+                         message-id="maxbidError"
+                  />
+                </div>
+                <span id="maxbidError"></span>
+              </div>
+              <div class="form-group  col-sm-4 ">
+                <label for="expBid"
+                       class="control-label">
+                  Expected Bid
+                </label>
+                <div class="input-group">
+                  <span class="input-group-addon">&#8377;</span>
+                  <input class="form-control"
+                         ng-model="form.expectedbid"
+                         aria-describedby="Expected Bid"
+                         id="expBid"
+                         name="expBid"
+                         placeholder="Enter Max Bid"
+                         validator="required, number"
+                         valid-method="submit, keyup"
+                         required-error-message="Please enter Expected Bid"
+                         number-error-message="Please enter valid amount for Expected Bid"
+                         message-id="expBidError"
+                  />
+                </div>
+                <span id="expBidError"></span>
+              </div>
+            </div>
+
+
+          </div>
+
+          <div class="row pt-20">
+            <div class="form-group  col-md-12">
+              <button type="submit"
+                      class="btn btn-primary submit-button ng-scope"
+                      ng-disabled="campaignForm.$invalid"
+                      ng-click="form.submit(campaignForm)"
+              >
+                Submit
+              </button>
+              <!--<button type="button" class="btn btn-default ng-scope" ng-click="reset()">Reset</button>-->
+            </div>
+          </div>
+        </form>
+        <!--<pre style="position: fixed; top:0; right: 0;">{{form | json}}</pre>-->
+
+      </div>
+    </div>
+  </div>
+</div>

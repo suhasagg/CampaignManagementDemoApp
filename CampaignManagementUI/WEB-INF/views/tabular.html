@@ -1,0 +1,12 @@
+<div ng-controller="tabularCtrl" ng-init ng-if="!!loggedIn" id="tabularData">
+   <div ng-if="!!expandableRow">
+<!--      <div class="control-group">
+         <input type="button" class="btn btn-small" ng-click="expandAllRows()" value="Expand All"/>
+         <input type="button" class="btn btn-small" ng-click="collapseAllRows()" value="Collapse All"/>
+      </div>-->
+      <div id="grid1" ui-grid="gridOptions" class="grid" ui-grid-pinning ui-grid-expandable></div>
+   </div>
+
+   <div id="grid1" ui-grid="gridOptions" class="grid" ng-if="!expandableRow"></div>
+
+</div>

@@ -1,0 +1,43 @@
+<div class="sidebar-content">
+    <!-- User menu -->
+    <div class="sidebar-user">
+        <div class="category-content">
+            <div class="media" ng-if="!!userDetails">
+                <a href="javascript:void(0);" ui-sref="appView.accountSettings({parentTxt:'Account Settings',pageName:''})" class="media-left"><img src="static/images/man-silhouette.png" class="img-circle img-sm" alt=""></a>
+                <div class="media-body">
+                    <span class="media-heading text-semibold">{{userDetails.firstname}} {{userDetails.lastname}}</span>
+                    <div class="text-size-mini text-muted" ng-if="!!userDetails.city && !!userDetails.state">
+                        <i class="icon-pin text-size-small"></i> &nbsp;{{userDetails.city}}, {{userDetails.state}},
+                    </div>
+                    <a href="javascript:void(0);" ng-click="logout()" class="logoutBtn">Logout!</a>
+                </div>
+
+                <div class="media-right">
+                    <ul class="icons-list">
+                        <li>
+                            <a href="javascript:void(0);" ui-sref="appView.accountSettings({parentTxt:'Account Settings',pageName:''})"><i class="icon-cog3"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /user menu -->
+
+    <!-- Main navigation -->
+    <div class="sidebar-category sidebar-category-visible">
+        <div class="category-content no-padding">
+            <ul class="navigation navigation-main navigation-accordion">
+                <!-- Main -->
+                <li ui-sref-active="active" id="dashboardLinks">
+                    <a href="#/appView/publisher" class="has-ul" ><i class="icon-home4"></i> <span>Dashboard</span></a>
+                    <ul>
+                        <li ui-sref-active="active"><a ui-sref="appView.publisher({parentTxt:'Dashboard',pageName:'Audiences'})"><i class="icon-users4"></i>Audience Breakdown</a></li>
+                    </ul>
+                </li>
+                <!-- /main -->
+            </ul>
+        </div>
+    </div>
+    <!-- /main navigation -->
+</div>
